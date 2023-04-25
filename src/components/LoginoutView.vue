@@ -27,9 +27,15 @@
             placeholder="密碼"
             clearable
           ></n-input>
-          <n-button type="info" color="white" ghost dashed class="mt-[10px] w-min self-end"
-            >登入</n-button
-          >
+          <n-button
+            @click="emit('login', account, password)"
+            type="info"
+            color="white"
+            ghost
+            dashed
+            class="mt-[10px] w-min self-end"
+            >登入
+          </n-button>
         </n-tab-pane>
         <n-tab-pane name="registor" tab="註冊">
           <n-input v-model:value="account" placeholder="帳號" clearable></n-input>
@@ -39,7 +45,13 @@
             placeholder="密碼"
             clearable
           ></n-input>
-          <n-button type="info" color="white" ghost dashed class="mt-[10px] w-min self-end"
+          <n-button
+            @click="emit('register', account, password)"
+            type="info"
+            color="white"
+            ghost
+            dashed
+            class="mt-[10px] w-min self-end"
             >註冊</n-button
           >
         </n-tab-pane>
@@ -64,7 +76,7 @@ import { Close } from '@vicons/ionicons5'
 const account = ref('')
 const password = ref('')
 
-const emit = defineEmits(['closeDialog'])
+const emit = defineEmits(['closeDialog', 'login', 'register'])
 
 const updateTab = () => {
   account.value = ''
