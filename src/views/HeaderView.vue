@@ -13,20 +13,27 @@
       日文單字卡
     </p>
     <n-icon
+      v-if="!isLogin"
       @click="loginoutDialog = true"
       :component="LogInOutline"
       size="40"
       class="cursor-pointer text-white hover:text-purple-300 hidden md:block ml-auto"
     ></n-icon>
     <n-icon
-      v-if="false"
+      v-if="isLogin"
       :component="LogOutOutline"
+      @click="logout"
       size="40"
       class="cursor-pointer text-white hover:text-purple-300 hidden md:block ml-auto"
     ></n-icon>
   </header>
   <!-- <transition name="myDialog"> -->
-  <LoginoutView v-if="loginoutDialog" @closeDialog="loginoutDialog = false" />
+  <LoginoutView
+    v-if="loginoutDialog"
+    @closeDialog="loginoutDialog = false"
+    @login="userLogin"
+    @register="userRegister"
+  />
   <!-- </transition> -->
   <RouterView />
 </template>
@@ -61,6 +68,35 @@ import { Beer, LogInOutline, LogOutOutline } from '@vicons/ionicons5'
 import { ref } from 'vue'
 import { RouterView } from 'vue-router'
 import LoginoutView from '@/components/LoginoutView.vue'
+import { useUserStore } from '@/stores/user'
+import { storeToRefs } from 'pinia'
+import { api, apiAuth } from '@/plugins/axios'
+const { isLogin } = storeToRefs(useUserStore())
+const { login, logout } = useUserStore()
 
 const loginoutDialog = ref(false)
+
+const userRegister = async (account, password) => {
+  try {
+    await api.post('/users', {
+      account,
+      password
+    })
+    loginoutDialog.value = false
+    alert('註冊成功')
+  } catch (error) {
+    alert('註冊失敗')
+  }
+}
+
+const userLogin = async (account, password) => {
+  // console.log('userLogin')
+  // console.log(account)
+  // console.log(password)
+  const ans = await login({
+    account,
+    password
+  })
+  if (ans) loginoutDialog.value = false
+}
 </script>
